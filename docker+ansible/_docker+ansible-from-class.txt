@@ -1,0 +1,145 @@
+Devops notion (dev + ops)
+
+Roadmap
+
+Stages: 
+Dev-staging-inegration	
+UAT: user acceptance test
+Pre-prod
+P
+rod
+
+Dev, uat and preprod must be private
++
+Rolling update
+Ansible(setup) + terraform(provisionning)
+High availability
+
+Linux->docker->Jenkins->sonarqube->ansible->Grafana->jmeter
+5eme annee -> K8S
+
+DOCKER:
+Snapshot container by extracting image from the current state -> Docker commit
+Exec run the command even if you don’t have shell
+
+Cmd and entrypoint
+
+Command linux history
+
+telnet tool to verify if a machine is directly connected to oher by specifying the ip and ALSO port
+
+overlay network type and also none type
+
+docker network connect ()
+
+types of volumes (volume, bind, tmpfs)
+
+volumes created in docker compose while mapping, if the volum begin with name and not a path, then you should notice that we don’t use bing here but created volumes that usually putted at the end like:
+
+volumes:
+	mydata….
+
+
+===============================================
+------------------- ANSIBLE -------------------
+===============================================
+
+difference between ansible and terraform
+
+advice\; you should always learn the inner architecture of any technlogy you wish to learn
+
+ansible connect to machines through ssh
+
+ssh with ip and user OR by certificats (ssl) 
+
+ssh-keygen => create two keys: private and public keys
+
+authorized_keys and .ssh folder structuerr ein linux
+
+when we want to connect to a remote machine, a verification occured between the private and the public in ansible, and do the check to allow or deny the connection
+
+private key has permission 600, public has 644
+
+if you change just the permission from keys the keys will not work
+
+keys should be present in the user dir ..ssh for that user to work, if other user try to connect it MUST have the keys inhis own .ssh keys folder
+
+the way to connect are 2 ways:
+
+- by default ssh user@ip and the key is by default used IF the keys are in the default directory (~/.ssh)
+- or by specifying the path of key using : ssh -i path/to/key UserB@Ip_B
+
+to copy key from one machine to other we can use: ssh-copy-id userB@IPB
+
+scp can also be used to transfer a file from machinea to machineb
+
+
+=== ansible: [Playbook and Role]
+
+a playbook is a yaml file that has a set of tasks, and also it can call a role
+
+ping of ansible: ansible  -m ping all
+
+ansiblke has a file called hosts which contain sll hosts that we will handle (is present: /etc/ansible/hosts)
+
+pplease make sure that permissions of keys must be 600 
+
+to create a role:ansible-galaxy init 
+
+role has taskds folder, variables defined in defaults folder
+
+vars priorities:  default < vars < extra vars
+
+extra vars take precedence over vars and defaults, and vars take over defaults
+
+files folder: has files and its coneten that could be shared across servers
+
+it uses a module called copy, if the contnet is already in the destination, it will calculate the checksum and if different it will override it
+
+before copying thr playbook, it replace the variables data before copy the file
+
+templates files have j2 exatension suffix so that ansiblre treat it as template but in the destination it is a service file
+
+templates uses template module
+
+ansible galaxy init
+
+folders created after: default, files, templates, tasks, vars, meta, vars handlers
+
+echallenge question frequently asked: where j2 files are stored (in templates)
+
+templates are in j2 and when they get transfered they become service:
+	template:
+		src: cassandra.j2
+		dest: /...../cassandra.service
+
+files use a module called copy which is positioned inside files folder
+sma e for templates, they used template module and it is positioned inside templates folder
+
+
+a task can be splitten like the conceptof functions, and you can use include_task to call the tasks
+
+hand;lers => main.yaml
+
+you define tasks that call handlers, and in handler it has a name and a job to do
+
+in tasks you can usre them using notify and the name in notify it should be the same in handler name
+
+tests folder: it has main.yaml file and it has these props:
+1. )hosts: where you want your role to be placed
+2. remote)user is the user to access the hosts
+3. become: true is used to do sudo before every command
+4. rol
+
+iventories
+
+inventory/client-name/env
+		      (dev,uat,prod)
+
+	group-vars/group1/vars.yaml
+	hosts (file)
+
+pay attention that the group name should be the same case sentive as foler in group-vars
+
+
+  
